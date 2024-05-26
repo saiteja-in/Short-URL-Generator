@@ -25,7 +25,11 @@ app.get("/:shortId", async (req, res) => {
       },
     }
   );
-  res.redirect(entry.redirectURL)
+  if (entry) {
+    res.redirect(entry.redirectURL);
+  } else {
+    res.status(404).send('Short URL not found');
+  }
 });
 
 app.listen(port, () => console.log("port is connected"));
