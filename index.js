@@ -7,24 +7,25 @@ const URL = require("./models/url");
 const urlRoute = require("./routes/url");
 const staticRoute=require('./routes/staticRouter')
 const userRoute=require('./routes/user')
-const{restrictToLoggedinUserOnly}=require('./middlewares/auth')
-
-
+const{restrictToLoggedinUserOnly,checkAuth}=require('./middlewares/auth')
 const port = 8000;
-app.use(express.json());
-app.use(express.urlencoded({extended:false}))
-app.use(cookieParser())
-
-app.set('view engine','ejs')
-app.set('views',path.resolve('./views'))
-
-app.use("/url",restrictToLoggedinUserOnly, urlRoute);
-app.use("/",staticRoute)
-app.use('/user',userRoute)
 
 connectToMongoDB(
   "mongodb+srv://saiteja:abcde@cluster0.u9jhqne.mongodb.net/short-url"
 ).then(() => console.log("mongodb connected"));
+
+
+app.set('view engine','ejs')
+app.set('views',path.resolve('./views'))
+
+app.use(express.json());
+app.use(express.urlencoded({extended:false}))
+app.use(cookieParser())
+
+app.use("/url",restrictToLoggedinUserOnly, urlRoute);
+app.use('/user',userRoute)
+app.use("/",checkAuth,staticRoute)
+
 
 
 app.get("/url/:shortId", async (req, res) => {

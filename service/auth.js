@@ -1,3 +1,5 @@
+
+
 const sessionIdToUserMap=new Map()
 
 function setUser(id,user){
@@ -5,7 +7,7 @@ function setUser(id,user){
 }
 
 function getUser(id){
-    sessionIdToUserMap.get(id)
+   return sessionIdToUserMap.get(id)
 }
 
 module.exports={
