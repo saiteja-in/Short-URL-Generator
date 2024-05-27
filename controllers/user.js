@@ -12,22 +12,19 @@ async function handleUserSignUp(req,res){
     return res.redirect("/")
 }
 async function handleUserLogin(req, res) {
-    const { email, password } = req.body;
-    try {
-      const user = await User.findOne({ email, password });
-      if (!user) {
-        return res.render("login", { error: "Invalid username or password" });
-      }
-      const sessionId = uuidv4();
-      setUser(sessionId, user);
-      res.cookie("uid", sessionId);
-      // Redirect the user to the home page after successful login
-      return res.redirect("/");
-    } catch (error) {
-      console.error("Error logging in:", error);
-      return res.status(500).send("Internal Server Error");
-    }
-  }
+  const { email, password } = req.body;
+  const user = await User.findOne({ email, password });
+
+  if (!user)
+    return res.render("login", {
+      error: "Invalid Username or Password",
+    });
+
+  // const sessionId = uuidv4();
+  const token=setUser(user);
+  res.cookie("uid", token);
+  return res.redirect("/");
+}
 
 module.exports={
     handleUserSignUp,
